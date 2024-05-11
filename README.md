@@ -1,5 +1,5 @@
 # Build Project
-npm install\ 
+npm install 
 To install all dependencies to run this project
 
 # Run Project
@@ -13,6 +13,6 @@ Nodejs and Express Js
 
 # Important
 Need to signup to razorpay to get key id and secret id inorder to run this project\
- https://razorpay.com\
+ https://razorpay.com
  Kindly visit this website for more queries
  
