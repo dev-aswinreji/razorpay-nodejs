@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay Integration Example</title>
+</head>
+<body>
+    <h1>Razorpay Integration Example</h1>
+    
+    <!-- Payment Form -->
+    <form id="payment-form">
+        <label for="amount">Amount (in paisa):</label><br>
+        <input type="text" id="amount" name="amount" value="1000"><br><br>
+        <button id="pay-button">Pay Now</button>
+    </form>
+
+    <!-- Razorpay Integration Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        document.getElementById('pay-button').addEventListener('click', async function (e) {
+            e.preventDefault();
+
+            // Get amount from the form
+            const amount = document.getElementById('amount').value;
+            console.log(amount,'amount is showing');
+            // Make a POST request to create a Razorpay order
+            try {
+                const response = await fetch(`/create-order`,{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({
+                        amount:amount
+                    })
+                })
+                console.log(response,'what is happening here');
+                if (!response.ok) {
+                    throw new Error('Failed to create order');
+                }
+
+                const order = await response.json();
+                console.log(order,'order is showing');
+                // Initialize Razorpay checkout
+                const options = {
+                    key: 'rzp_test_e55Dk1oHQbvyBo',
+                    amount: order.amount,
+                    currency: order.currency,
+                    order_id: order.id,
+                    name: 'Your Company Name',
+                    description: 'Test Payment',
+                    image: 'https://via.placeholder.com/150',
+                    handler: function (response) {
+                        alert('Payment Successful! Payment ID: ' + response.razorpay_payment_id);
+                    },
+                    prefill: {
+                        name: 'John Doe',
+                        email: 'john.doe@example.com',
+                        contact: '1234567890'
+                    },
+                    theme: {
+                        color: '#528FF0'
+                    }
+                };
+
+                const razorpayInstance = new Razorpay(options);
+                razorpayInstance.open();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to create order');
+            }
+        });
+    </script>
+</body>
+</html>
